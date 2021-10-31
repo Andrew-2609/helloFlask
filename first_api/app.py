@@ -15,5 +15,12 @@ def sum_get(first_value, second_value):
     return jsonify({"sum": total})
 
 
+@app.route('/sum/post', methods=["POST"])
+def sum_post():
+    data = json.loads(request.data)
+    total = sum(data['values'])
+    return jsonify({"sum": total})
+
+
 if __name__ == '__main__':
     app.run(debug=True)
