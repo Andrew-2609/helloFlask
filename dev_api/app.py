@@ -15,7 +15,7 @@ developers = [
 ]
 
 
-@app.route('/dev/<int:developer_id>', methods=["GET", "PUT"])
+@app.route('/dev/<int:developer_id>', methods=["GET", "PUT", "DELETE"])
 def developer(developer_id):
     if request.method == "GET":
         found_developer = developers[developer_id]
@@ -24,6 +24,9 @@ def developer(developer_id):
         new_data = json.loads(request.data)
         developers[developer_id] = new_data
         return developers[developer_id]
+    elif request.method == "DELETE":
+        developers.pop(developer_id)
+        return jsonify({"status": "success", "message": "entry successfully deleted"})
 
 
 if __name__ == '__main__':
