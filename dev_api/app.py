@@ -4,7 +4,7 @@ import json
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
 
-developers = [
+list_developers = [
     {
         "name": "Andrew Monteiro",
         "skills": ["Java", "Python"]
@@ -16,12 +16,22 @@ developers = [
 ]
 
 
+@app.route('/dev/', methods=["GET", "POST"])
+def developers():
+    if request.method == "GET":
+        return jsonify(list_developers)
+    elif request.method == "POST":
+        data = request.data
+        list_developers.append(json.loads(data))
+        return jsonify({"status": "success", "message": "entry successfully added"})
+
+
 # noinspection PyBroadException
 @app.route('/dev/<int:developer_id>', methods=["GET", "PUT", "DELETE"])
 def developer(developer_id):
     if request.method == "GET":
         try:
-            response = developers[developer_id]
+            response = list_developers[developer_id]
         except IndexError:
             response = {"status": "error", "message": "developer not found"}
         except Exception:
@@ -30,10 +40,10 @@ def developer(developer_id):
         return jsonify(response)
     elif request.method == "PUT":
         new_data = json.loads(request.data)
-        developers[developer_id] = new_data
-        return developers[developer_id]
+        list_developers[developer_id] = new_data
+        return list_developers[developer_id]
     elif request.method == "DELETE":
-        developers.pop(developer_id)
+        list_developers.pop(developer_id)
         return jsonify({"status": "success", "message": "entry successfully deleted"})
 
 
